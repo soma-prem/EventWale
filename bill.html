@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(255, 218, 185, 0.3), rgba(255, 218, 185, 0.5)), url('images/background.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #333;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #FFDAB9;
+            border-radius: 10px;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #e67e22;
+            box-shadow: 0 0 5px rgba(230,126,34,0.3);
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .payment-option {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-option:hover {
+            border-color: #e67e22;
+        }
+
+        .payment-option.selected {
+            border-color: #e67e22;
+            background-color: #fff3e0;
+        }
+
+        .qr-section {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .qr-code {
+            max-width: 200px;
+            margin: 1rem auto;
+        }
+
+        .selected-items {
+            margin: 2rem 0;
+        }
+
+        .item-list {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-weight: 500;
+        }
+
+        .item-price {
+            color: #e67e22;
+        }
+
+        .total {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            border-top: 2px solid #ddd;
+            font-weight: bold;
+            text-align: right;
+            font-size: 1.2rem;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .total-amount {
+            font-size: 1.5rem;
+            color: #e67e22;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-in-words {
+            font-size: 1rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .receipt-logo {
+            max-width: 150px;
+            margin-bottom: 1rem;
+        }
+
+        .receipt-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn {
+            background-color: #e67e22;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #d35400;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: rgba(230, 126, 34, 0.9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-btn:hover {
+            background: rgba(211, 84, 0, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.php#ceremonies.html" class="back-btn">← Back to Home</a>
+    <div class="container">
+        <div class="header">
+            <h1>Booking Details</h1>
+        </div>
+
+        <form id="bookingForm" form action="receipt.php" method="post">
+            <div class="form-section">
+                <h2>Personal Information</h2>
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number *</label>
+                    <input type="tel" id="mobile" pattern="[0-9]{10}" required>
+                </div>
+                <div class="form-group">
+                    <label for="guestCount">Number of Guests *</label>
+                    <select id="guestCount" required onchange="updateTotal()">
+                        <option value="">Select number of guests</option>
+                        <option value="50">50 Guests</option>
+                        <option value="100">100 Guests</option>
+                        <option value="200">200 Guests</option>
+                        <option value="500">500 Guests</option>
+                        <option value="1000">1000 Guests</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <textarea id="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="pincode">Pincode *</label>
+                    <input type="text" id="pincode" pattern="[0-9]{6}" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Ceremony Details</h2>
+                <div class="form-group">
+                    <label for="date">Ceremony Date *</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="time">Ceremony Time *</label>
+                    <input type="time" id="time" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Selected Items</h2>
+                <div class="item-list" id="selectedItemsList">
+                    <!-- Items will be populated by JavaScript -->
+                </div>
+                <div class="total" id="totalAmount">
+                    <!-- Total amount will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Payment Method</h2>
+                <div class="payment-options">
+                    <div class="payment-option" data-method="cash">
+                        <h3>Cash</h3>
+                        <p>Pay at venue</p>
+                    </div>
+                    <div class="payment-option" data-method="online">
+                        <h3>Online</h3>
+                        <p>Pay via UPI/QR</p>
+                    </div>
+                </div>
+                <div class="qr-section" id="qrSection">
+                    <h3>Scan QR Code to Pay</h3>
+                    <img src="images/Thank you.png" alt="Payment QR Code" class="qr-code">
+                    <p>After payment, click submit to confirm your booking</p>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" name="btn">Confirm Booking</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to convert number to words
+        function numberToWords(num) {
+            const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+            const teens = ["Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+            const scales = ["", "Thousand", "Lakh", "Crore"];
+
+            if (num === 0) return "Zero";
+
+            function processGroup(n) {
+                if (n === 0) return "";
+                else if (n < 11) return units[n];
+                else if (n < 20) return teens[n-11];
+                else if (n < 100) {
+                    const unit = n % 10;
+                    const ten = Math.floor(n / 10);
+                    return tens[ten] + (unit !== 0 ? " " + units[unit] : "");
+                }
+                else {
+                    const unit = n % 100;
+                    const hundred = Math.floor(n / 100);
+                    return units[hundred] + " Hundred" + (unit !== 0 ? " and " + processGroup(unit) : "");
+                }
+            }
+
+            let words = "";
+            let groupIndex = 0;
+            
+            while (num > 0) {
+                let n = 0;
+                if (groupIndex === 0) {
+                    n = num % 1000;
+                    num = Math.floor(num / 1000);
+                } else {
+                    n = num % 100;
+                    num = Math.floor(num / 100);
+                }
+                
+                if (n !== 0) {
+                    let groupWords = processGroup(n);
+                    if (groupIndex > 0 && groupWords !== "") {
+                        groupWords += " " + scales[groupIndex];
+                    }
+                    words = groupWords + (words ? " " + words : "");
+                }
+                
+                groupIndex++;
+            }
+            
+            return words + " Rupees Only";
+        }
+
+        // Get selected items from localStorage
+        const selectedItems = JSON.parse(localStorage.getItem('selectedItems') || '[]');
+        const selectedItemsList = document.getElementById('selectedItemsList');
+        const totalAmountElement = document.getElementById('totalAmount');
+        let total = 0;
+
+        function updateTotal() {
+            const guestCount = parseInt(document.getElementById('guestCount').value) || 0;
+            total = 0;
+
+            // Clear the existing items list
+            selectedItemsList.innerHTML = '';
+
+            // Add each selected item to the list with the calculated price
+            selectedItems.forEach(item => {
+                // Extract numeric price value from the price string
+                const priceValue = parseInt(item.price.replace(/[^0-9]/g, ''));
+                let itemTotal;
+                let displayText;
+
+                // Categories that don't need to be multiplied by guest count
+                const nonMultiplyCategories = ['decoration', 'cradle', 'Electronic', 'cakes', 'flowers'];
+
+                if (nonMultiplyCategories.includes(item.category)) {
+                    // For these categories, don't multiply by guest count
+                    itemTotal = priceValue;
+                    displayText = `${item.name} (₹${priceValue})`;
+                } else {
+                    // For furniture and other items, multiply by guest count
+                    itemTotal = priceValue * guestCount;
+                    displayText = `${item.name} (₹${priceValue} × ${guestCount} guests)`;
+                }
+                
+                total += itemTotal;
+
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item';
+                itemElement.innerHTML = `
+                    <span class="item-name">${displayText}</span>
+                    <span class="item-price">₹${itemTotal}</span>
+                `;
+                selectedItemsList.appendChild(itemElement);
+            });
+
+            // Update the total amount
+            totalAmountElement.innerHTML = `
+                <div class="total-amount">Total Amount: ₹${total}</div>
+                <div class="total-in-words">${numberToWords(total)}</div>
+            `;
+        }
+
+        // Initial display of items
+        updateTotal();
+
+        // Payment option selection
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const qrSection = document.querySelector('.qr-section');
+
+        paymentOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                paymentOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                
+                if (option.dataset.method === 'online') {
+                    qrSection.style.display = 'block';
+                } else {
+                    qrSection.style.display = 'none';
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Store booking details in localStorage
+            const bookingDetails = {
+                name: document.getElementById('name').value,
+                mobile: document.getElementById('mobile').value,
+                date: document.getElementById('date').value,
+                guestCount: document.getElementById('guestCount').value,
+                paymentMethod: document.querySelector('.payment-option.selected').dataset.method
+            };
+            
+            localStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
+            
+            // Redirect to receipt page
+            window.location.href = 'receipt.php';
+        });
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').min = today;
+    </script>
+</body>
+</html>
