@@ -10,10 +10,24 @@ Submit online approval to offline stores
 User-friendly interface for easy event planning
 
 ![image_alt](one.png)
+
+
 ![image_alt](two.png)
+
+
 ![image_alt](three.png)
+
+
 ![image_alt](four.png)
+
+
 ![image_alt](five.png)
+
+
 ![image_alt](six.png)
+
+
 ![image_alt](seven.png)
+
+
 ![image_alt](eight.png)
